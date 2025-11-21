@@ -103,8 +103,25 @@ def bisection(
             - Liczba wykonanych iteracji.
         Jeżeli dane wejściowe są niepoprawne funkcja zwraca `None`.
     """
-    pass
+    
+    if not isinstance(a, (int, float)) or not isinstance(b, (int, float)) or not isinstance(epsilon, float) or not isinstance(max_iter, int):
+        return None
 
+    
+    iters = 0    
+    for i in range(max_iter):
+        iters += 1
+        c = (a+b) / 2
+
+        if np.sign(f(a)) == np.sign(f(c)):
+            a = c
+        else:
+            b = c
+        
+        if abs(f(c)) < epsilon:
+            return c,iters
+
+    return c,iters        
 
 def secant(
     a: int | float,
@@ -130,7 +147,33 @@ def secant(
             - Liczba wykonanych iteracji.
         Jeżeli dane wejściowe są niepoprawne funkcja zwraca `None`.
     """
-    pass
+    if not isinstance(a, (int, float)) or not isinstance(b, (int, float)) or not isinstance(epsilon, float) or not isinstance(max_iters, int):
+        return None
+    
+    iters = 0    
+    for i in range(max_iters):
+        iters += 1
+        y = [f(a), f(b)]
+        x = [a, b]
+        p = np.polyfit(x,y,1)
+
+        
+        c = -p[1]/p[0]
+
+        if np.sign(f(a)) == np.sign(f(c)):
+            a = c
+        else:
+            b = c
+
+        if abs(f(c)) < epsilon:
+            return c, iters
+    
+    return c, iters
+
+
+
+
+    return c,iters    
 
 
 def difference_quotient(
@@ -150,7 +193,10 @@ def difference_quotient(
         (float): Wartość ilorazu różnicowego.
         Jeżeli dane wejściowe są niepoprawne funkcja zwraca `None`.
     """
-    pass
+    if not isinstance(x, (int, float)) or not isinstance(h, (int, float)):
+        return None
+    
+    return (f(x+h) - f(x)) / h
 
 
 def newton(
@@ -182,4 +228,26 @@ def newton(
             - Liczba wykonanych iteracji.
         Jeżeli dane wejściowe są niepoprawne funkcja zwraca `None`.
     """
-    pass
+    if not isinstance(a, (int, float)) or not isinstance(b, (int, float)) or not isinstance(epsilon, float) or not isinstance(max_iter, int):
+        return None
+    
+    
+    if f(a)*ddf(a) > 0:
+        check = a
+    elif f(b)*ddf(b) > 0:
+        check = b
+        
+    iters = 0
+    for i in range(max_iter):
+        iters += 1
+        
+
+        xn = check - f(check) / df(check)
+
+        check = xn
+        
+        if abs(f(xn)) < epsilon:
+            return xn, iters
+    
+    return xn, iters
+
